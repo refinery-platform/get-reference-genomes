@@ -24,15 +24,17 @@ which bedToBigBed || ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_6
 # "tee /dev/tty" does this for us: STDOUT is duplicated,
 # with one going to the screen, and the other going to grep.
 
+
 # Expect usage message if no args
 ./genome-to-local.sh 2>&1 | tee /dev/tty | grep 'USAGE'
+
 
 # Expect error message if invalid genome
 ./genome-to-local.sh no-such-genome 2>&1 | tee /dev/tty | grep 'no-such-genome is not available at'
 
-G=hg19
 
 # Expect successful download and unzip
+G=hg19
 ./genome-to-local.sh $G 2>&1 | tee /tmp/log.txt
 
 grep "/tmp/genomes/$G/cytoBand.txt" /tmp/log.txt
@@ -41,7 +43,9 @@ grep "/tmp/genomes/$G/hg19.fa.fai" /tmp/log.txt
 grep "/tmp/genomes/$G/refGene.bed" /tmp/log.txt
 grep "/tmp/genomes/$G/refGene.bed.index" /tmp/log.txt
 
-for FILE in `ls /tmp/genomes/$G | grep -v 2bit`; do 
+# Compare the files we've produced to the 10-line fixtures;
+# "grep -v" to ignore intermediate files in /tmp/genomes.
+for FILE in `ls /tmp/genomes/$G | grep -v 2bit | grep -v refGene.txt`; do 
   diff <(head /tmp/genomes/$G/$FILE) tests/$FILE.head
 done
 
