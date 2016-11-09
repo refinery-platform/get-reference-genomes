@@ -12,11 +12,14 @@ trap 'err_report $LINENO' ERR
 chmod a+x ./genome-to-s3.sh
 
 # Install dependencies
-which faidx || pip install pyfaidx
+mkdir -p vendor
+PATH=$PATH:vendor
+
+which faidx || pip install --user pyfaidx
 which twoBitToFa ||  ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/twoBitToFa \
-                       && chmod a+x twoBitToFa && mv twoBitToFa /usr/local/bin )
+                       && chmod a+x twoBitToFa && mv twoBitToFa vendor )
 which bedToBigBed || ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedToBigBed \
-                       && chmod a+x bedToBigBed && mv bedToBigBed /usr/local/bin ) 
+                       && chmod a+x bedToBigBed && mv bedToBigBed vendor )
 
 # Expect usage message if no args
 ./genome-to-s3.sh 2>&1 | grep 'USAGE'
