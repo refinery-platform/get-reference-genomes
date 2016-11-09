@@ -12,14 +12,13 @@ trap 'err_report $LINENO' ERR
 chmod a+x ./genome-to-s3.sh
 
 # Install dependencies
-mkdir -p vendor
-PATH=$PATH:vendor
+PATH=$PATH:`pwd`
 
 which faidx || pip install --user pyfaidx
 which twoBitToFa ||  ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/twoBitToFa \
-                       && chmod a+x twoBitToFa && mv twoBitToFa vendor )
+                       && chmod a+x twoBitToFa )
 which bedToBigBed || ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedToBigBed \
-                       && chmod a+x bedToBigBed && mv bedToBigBed vendor )
+                       && chmod a+x bedToBigBed )
 
 # In the tests below, we want to see the entire output, and grep for particular strings.
 # "tee /dev/tty" does this for us: STDOUT is duplicated,
