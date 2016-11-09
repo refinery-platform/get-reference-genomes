@@ -30,8 +30,14 @@ which bedToBigBed || ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_6
 # Expect error message if invalid genome
 ./genome-to-local.sh no-such-genome 2>&1 | tee /dev/tty | grep 'no-such-genome is not available at'
 
-# Expect successful download
-./genome-to-local.sh hg19 2>&1 | tee /dev/tty | grep 'Disk space used'
+# Expect successful download and unzip
+./genome-to-local.sh hg19 2>&1 | tee /tmp/log.txt
+
+grep '/tmp/genomes/hg19/cytoBand.txt' /tmp/log.txt
+grep '/tmp/genomes/hg19/hg19.fa' /tmp/log.txt
+grep '/tmp/genomes/hg19/hg19.fa.fai' /tmp/log.txt
+grep '/tmp/genomes/hg19/refGene.bed' /tmp/log.txt
+grep '/tmp/genomes/hg19/refGene.bed.index' /tmp/log.txt
 
 echo 'PASS'
 

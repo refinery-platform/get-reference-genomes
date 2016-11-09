@@ -1,7 +1,8 @@
 #!/bin/bash
 set -o errexit
 set -o nounset
-
+#set -o verbose
+#set -o xtrace
 
 ### Helper functions
 
@@ -12,7 +13,7 @@ download_and_unzip() {
   # $1 will include one parent directory.
   BASE=`basename $1`
   URL=ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/
-  curl $URL || die "$GENOME is not available at $URL"
+  curl $URL --silent > /dev/null || die "$GENOME is not available at $URL"
   if [ -e $BASE.gz ] || [ -e $BASE ]
     then warn "$BASE.gz or $BASE already exists: skip download"
     else curl -O $URL$1.gz \
@@ -68,7 +69,10 @@ for GENOME in $@; do
   
   download_and_unzip bigZips/$GENOME.2bit
   if [[ -e $GENOME.2bit ]]; then
-    twoBitToFa $GENOME.2bit $GENOME.fa
+    if [[ -e $GENOME.fa ]]
+      then warn "$GENOME.fa already exists: will not regenerate"
+      else twoBitToFa $GENOME.2bit $GENOME.fa
+    fi
   fi
 
   download_and_unzip bigZips/$GENOME.fa
@@ -94,12 +98,17 @@ for GENOME in $@; do
   #   exonCount / exonStarts / exonEnds / score / name2 / cdsStartStat / cdsEndStat / exonFrames
   # BED columns: (https://genome.ucsc.edu/FAQ/FAQformat#format1)
   #   chrom / chromStart / chromEnd / name / ...
-  paste <(cut -f 3,5,6 refGene.txt) <(cut -f 2 refGene.txt) | sort -k1,1 -k2,2n > refGene.bed
-  rm refGene.txt
+  if [[ -e refGene.bed ]]
+    then warn "refGene.bed already exists: will not regenerate"
+    else paste <(cut -f 3,5,6 refGene.txt) <(cut -f 2 refGene.txt) | sort -k1,1 -k2,2n > refGene.bed
+  fi
 
   CHROM_URL=http://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/bigZips/$GENOME.chrom.sizes
-  bedToBigBed refGene.bed $CHROM_URL refGene.bed.index
+  if [[ -e refGene.bed.index ]]
+    then warn "refGene.bed.index already exists: will not regenerate"
+    else bedToBigBed refGene.bed $CHROM_URL refGene.bed.index
+  fi
 done
 
 echo 'Disk space used:'
-du -h $LOCAL
+du -ah $LOCAL
