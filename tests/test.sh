@@ -22,10 +22,10 @@ which bedToBigBed || ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_6
                        && chmod a+x bedToBigBed && mv bedToBigBed vendor )
 
 # Expect usage message if no args
-./genome-to-s3.sh 2>&1 | grep 'USAGE'
+./genome-to-local.sh 2>&1 | grep 'USAGE'
 
 # Expect error message if invalid genome
-./genome-to-s3.sh no-such-genome 2>&1 | grep 'some error message'
+./genome-to-local.sh no-such-genome 2>&1 | grep 'some error message'
 
 echo 'PASS'
 
