@@ -100,7 +100,7 @@ for GENOME in $@; do
   #   chrom / chromStart / chromEnd / name / ...
   if [[ -e refGene.bed ]]
     then warn "refGene.bed already exists: will not regenerate"
-    else paste <(cut -f 3,5,6 refGene.txt) <(cut -f 2 refGene.txt) | sort -k1,1 -k2,2n > refGene.bed
+    else paste <(cut -f 3,5,6,13 refGene.txt) | sort -k1,1 -k2,2n > refGene.bed
   fi
 
   CHROM_URL=http://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/bigZips/$GENOME.chrom.sizes
