@@ -44,9 +44,9 @@ which bedToBigBed > /dev/null || die 'Install bedToBigBed:
 Choose the directory of your OS on http://hgdownload.soe.ucsc.edu/admin/exe/,
 download "bedToBigBed", and "chmod a+x". (Or build from source.)'
 
-which aws > /dev/null || die 'Install aws-cli'
-
-aws s3 ls > /dev/null || die 'Check aws-cli credentials'
+#which aws > /dev/null || die 'Install aws-cli'
+#
+#aws s3 ls > /dev/null || die 'Check aws-cli credentials'
 
 
 ### Main
@@ -103,8 +103,8 @@ for GENOME in $@; do
   bedToBigBed refGene.bed $CHROM_URL refGene.bed.index
 done
 
-aws s3 sync --exclude "*.gz" --exclude "*.2bit" --region us-east-1 \
-    $LOCAL s3://data.cloud.refinery-platform.org/data/igv-reference
+#aws s3 sync --exclude "*.gz" --exclude "*.2bit" --region us-east-1 \
+#    $LOCAL s3://data.cloud.refinery-platform.org/data/igv-reference
 
 echo 'Delete the cache to free up some disk.'
 du -h $LOCAL

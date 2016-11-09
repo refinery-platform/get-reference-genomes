@@ -1,0 +1,3 @@
+script:
+  - set -e # Any error will cause travis to exit early and report a failure.
+  - tests/test.sh
