@@ -9,7 +9,7 @@ err_report() {
 }
 trap 'err_report $LINENO' ERR
 
-chomod a+x ./genome-to-s3.sh
+chmod a+x ./genome-to-s3.sh
 
 # Install dependencies
 which faidx || pip install pyfaidx
