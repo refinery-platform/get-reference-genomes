@@ -11,10 +11,12 @@ warn() { echo "$@" 1>&2; }
 download_and_unzip() {
   # $1 will include one parent directory.
   BASE=`basename $1`
+  URL=ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/
+  curl $URL || die "$GENOME is not available at $URL"
   if [ -e $BASE.gz ] || [ -e $BASE ]
     then warn "$BASE.gz or $BASE already exists: skip download"
-    else curl -O ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/$1.gz \
-      || curl -O ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/$1 \
+    else curl -O $URL$1.gz \
+      || curl -O $URL$1 \
       || warn "neither $1.gz nor $1 is available" 
   fi
 

@@ -29,7 +29,7 @@ which bedToBigBed || ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_6
 ./genome-to-local.sh 2>&1 | tee /dev/tty | grep 'USAGE'
 
 # Expect error message if invalid genome
-./genome-to-local.sh no-such-genome 2>&1 | tee /dev/tty | grep 'no-such-genome: No such file or directory'
+./genome-to-local.sh no-such-genome 2>&1 | tee /dev/tty | grep 'no-such-genome is not available at'
 
 # Expect successful download
 ./genome-to-local.sh hg19 2>&1 | tee /dev/tty | grep 'Disk space used'
