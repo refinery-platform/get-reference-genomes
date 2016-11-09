@@ -11,15 +11,15 @@ trap 'err_report $LINENO' ERR
 
 chomod a+x ./genome-to-s3.sh
 
-# Expect usage message if no args
-./genome-to-s3.sh 2>&1 | grep 'USAGE'
-
 # Install dependencies
 which faidx || pip install pyfaidx
 which twoBitToFa ||  ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/twoBitToFa \
                        && chmod a+x twoBitToFa && mv twoBitToFa /usr/local/bin )
 which bedToBigBed || ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedToBigBed \
                        && chmod a+x bedToBigBed && mv bedToBigBed /usr/local/bin ) 
+
+# Expect usage message if no args
+./genome-to-s3.sh 2>&1 | grep 'USAGE'
 
 # Expect error message if invalid genome
 ./genome-to-s3.sh no-such-genome 2>&1 | grep 'some error message'
