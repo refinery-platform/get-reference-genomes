@@ -21,11 +21,18 @@ which twoBitToFa ||  ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_6
 which bedToBigBed || ( wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedToBigBed \
                        && chmod a+x bedToBigBed && mv bedToBigBed vendor )
 
+# In the tests below, we want to see the entire output, and grep for particular strings.
+# "tee /dev/tty" does this for us: STDOUT is duplicated,
+# with one going to the screen, and the other going to grep.
+
 # Expect usage message if no args
-./genome-to-local.sh 2>&1 | grep 'USAGE'
+./genome-to-local.sh 2>&1 | tee /dev/tty | grep 'USAGE'
 
 # Expect error message if invalid genome
-./genome-to-local.sh no-such-genome 2>&1 | grep 'some error message'
+./genome-to-local.sh no-such-genome 2>&1 | tee /dev/tty | grep 'no-such-genome: No such file or directory'
+
+# Expect successful download
+./genome-to-local.sh hg19 2>&1 | tee /dev/tty | grep 'Disk space used'
 
 echo 'PASS'
 
