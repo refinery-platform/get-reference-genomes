@@ -13,8 +13,8 @@ download_and_unzip() {
   BASE=`basename $1`
   if [ -e $BASE.gz ] || [ -e $BASE ]
     then warn "$BASE.gz or $BASE already exists: skip download"
-    else ftp ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/$1.gz \
-      || ftp ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/$1 \
+    else curl -O ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/$1.gz \
+      || curl -O ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/$1 \
       || warn "neither $1.gz nor $1 is available" 
   fi
 
