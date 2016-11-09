@@ -35,11 +35,11 @@ G=hg19
 # Expect successful download and unzip
 ./genome-to-local.sh $G 2>&1 | tee /tmp/log.txt
 
-grep '/tmp/genomes/$G/cytoBand.txt' /tmp/log.txt
-grep '/tmp/genomes/$G/hg19.fa' /tmp/log.txt
-grep '/tmp/genomes/$G/hg19.fa.fai' /tmp/log.txt
-grep '/tmp/genomes/$G/refGene.bed' /tmp/log.txt
-grep '/tmp/genomes/$G/refGene.bed.index' /tmp/log.txt
+grep "/tmp/genomes/$G/cytoBand.txt" /tmp/log.txt
+grep "/tmp/genomes/$G/hg19.fa" /tmp/log.txt
+grep "/tmp/genomes/$G/hg19.fa.fai" /tmp/log.txt
+grep "/tmp/genomes/$G/refGene.bed" /tmp/log.txt
+grep "/tmp/genomes/$G/refGene.bed.index" /tmp/log.txt
 
 for FILE in `ls /tmp/genomes/$G | grep -v 2bit`; do 
   diff <(head /tmp/genomes/$G/$FILE) tests/$FILE.head
