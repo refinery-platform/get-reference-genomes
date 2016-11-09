@@ -9,6 +9,8 @@ err_report() {
 }
 trap 'err_report $LINENO' ERR
 
+chomod a+x ./genome-to-s3.sh
+
 # Expect usage message if no args
 ./genome-to-s3.sh 2>&1 | grep 'USAGE'
 
