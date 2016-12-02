@@ -2,22 +2,21 @@
 set -o errexit
 set -o nounset
 #set -o verbose
-#set -o xtrace
+set -o xtrace
 
 ### Helper functions
 
 die() { echo "$@" 1>&2; exit 1; }
 warn() { echo "$@" 1>&2; }
 
+
 download_and_unzip() {
   # $1 will include one parent directory.
   BASE=`basename $1`
-  URL=ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/
-  curl $URL --silent > /dev/null || die "$GENOME is not available at $URL"
   if [ -e $BASE.gz ] || [ -e $BASE ]
     then warn "$BASE.gz or $BASE already exists: skip download"
-    else curl -O $URL$1.gz \
-      || curl -O $URL$1 \
+    else curl -O --fail $BASE_URL$1.gz \
+      || curl -O --fail $BASE_URL$1 \
       || warn "neither $1.gz nor $1 is available" 
   fi
 
@@ -50,7 +49,10 @@ download "bedToBigBed", and "chmod a+x". (Or build from source.)'
 
 ### Main
 
-LOCAL=/tmp/genomes
+if [ -z "$TEST_DEST" ]
+  then LOCAL=/tmp/genomes
+  else LOCAL="$TEST_DEST"
+fi
 
 mkdir -p $LOCAL
 
@@ -63,8 +65,15 @@ fi
 for GENOME in $@; do
   echo # Blank line for readability
   echo "Starting $GENOME..."
+
+  if [ -z "$TEST_DEST" ]
+    then BASE_URL=ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/
+    else BASE_URL=http://localhost:8000/
+  fi
+  curl --fail $BASE_URL || die "$GENOME is not available at $BASE_URL"
+
   cd $LOCAL
-  mkdir -p $GENOME  
+  mkdir -p $GENOME
   cd $GENOME
   
   download_and_unzip bigZips/$GENOME.2bit
@@ -103,7 +112,7 @@ for GENOME in $@; do
     else paste <(cut -f 3,5,6,13 refGene.txt) | sort -k1,1 -k2,2n > refGene.bed
   fi
 
-  CHROM_URL=http://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/bigZips/$GENOME.chrom.sizes
+  CHROM_URL=$BASE_URL/bigZips/$GENOME.chrom.sizes
   if [[ -e refGene.bed.index ]]
     then warn "refGene.bed.index already exists: will not regenerate"
     else bedToBigBed refGene.bed $CHROM_URL refGene.bed.index
