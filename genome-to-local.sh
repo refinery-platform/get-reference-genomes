@@ -113,9 +113,9 @@ for GENOME in $@; do
   fi
 
   CHROM_URL=$BASE_URL/bigZips/$GENOME.chrom.sizes
-  if [[ -e refGene.bed.index ]]
-    then warn "refGene.bed.index already exists: will not regenerate"
-    else bedToBigBed refGene.bed $CHROM_URL refGene.bed.index
+  if [[ -e refGene.bed.tbi ]]
+    then warn "refGene.bed.tbi already exists: will not regenerate"
+    else bedToBigBed refGene.bed $CHROM_URL refGene.bed.tbi
   fi
 done
 

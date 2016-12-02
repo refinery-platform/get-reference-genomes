@@ -50,12 +50,12 @@ grep $TEST_DEST/$G/cytoBand.txt      /tmp/log.txt
 grep $TEST_DEST/$G/hg19.fa           /tmp/log.txt
 grep $TEST_DEST/$G/hg19.fa.fai       /tmp/log.txt
 grep $TEST_DEST/$G/refGene.bed       /tmp/log.txt
-grep $TEST_DEST/$G/refGene.bed.index /tmp/log.txt
+grep $TEST_DEST/$G/refGene.bed.tbi   /tmp/log.txt
 
 # Compare the files we've produced to the 10-line fixtures;
 # "grep -v" to ignore intermediate files in /tmp/genomes.
 # TODO: The bed.index file ideally would match, too.
-for FILE in `ls $TEST_DEST/$G | grep -v 2bit | grep -v refGene.txt | grep -v bed.index`; do
+for FILE in `ls $TEST_DEST/$G | grep -v 2bit | grep -v refGene.txt | grep -v bed.tbi`; do
   diff <(head $TEST_DEST/$G/$FILE) tests/output/$FILE.head
 done
 
