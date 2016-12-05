@@ -18,6 +18,12 @@
     <script type="text/javascript" src="https://igv.org/web/release/1.0.5/igv-1.0.5.js"></script>
 </head>
 <body>
+<p>
+  This is a demonstation of IGV running against a test dataset produced by
+  <a href="https://github.com/refinery-platform/get-reference-genomes">get-reference-genomes</a>.
+  If the tests are passing, and genome-to-s3.sh has been run,
+  then the same tracks should be available on S3.
+<p>
 <div class="container-fluid" id="igv"></div>
 <script type="text/javascript">
 
@@ -29,14 +35,20 @@
                     showRuler: true,
                     genome: "hg19",
                     locus: "chr1:10000-40000",
+                    // TODO: use local copies
+//                    reference: {
+//                        fastaURL: 'https://s3.amazonaws.com/data.cloud.refinery-platform.org/data/igv-reference/hg19/hg19.fa',
+//                        indexURL: 'https://s3.amazonaws.com/data.cloud.refinery-platform.org/data/igv-reference/hg19/hg19.fa.fai',
+//                        cytobandURL: 'https://s3.amazonaws.com/data.cloud.refinery-platform.org/data/igv-reference/hg19/cytoBand.txt'
+//                    },
                     tracks: [
                         {
-                            name: "Genes",
+                            name: "Genes, full",
                             type: "annotation",
                             format: "bed",
                             sourceType: "file",
-                            url: "output/refGene.bed.head",
-                            indexURL: "output/refGene.bed.tbi.head",
+                            url: "tests/output/refGene.bed.head",
+                            indexURL: "tests/output/refGene.bed.tbi.head",
                             displayMode: "EXPANDED"
                         }
 
