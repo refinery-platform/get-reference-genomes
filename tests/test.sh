@@ -33,7 +33,7 @@ ps # Is it running?
 
 # Expect usage message if no args
 export TEST_DEST=/tmp/genomes-test/`date +"%Y-%m-%d_%H-%M-%S_no_args"`
-./genome-to-local.sh 2>&1 | tee /dev/tty | grep 'USAGE'
+bash -x genome-to-local.sh 2>&1 | tee /dev/tty | grep 'USAGE'
 
 
 # Expect error message if invalid genome
@@ -43,7 +43,7 @@ export TEST_DEST=/tmp/genomes-test/`date +"%Y-%m-%d_%H-%M-%S_no_args"`
 # Expect successful download and unzip
 G=hg19
 export TEST_DEST=/tmp/genomes-test/`date +"%Y-%m-%d_%H-%M-%S_good"`
-./genome-to-local.sh $G 2>&1 | tee /tmp/log.txt
+bash -x genome-to-local.sh $G 2>&1 | tee /tmp/log.txt
 # Directory for tee must already exist, so just replacing /tmp with $TEST_DEST won't work.
 
 grep $TEST_DEST/$G/cytoBand.txt      /tmp/log.txt

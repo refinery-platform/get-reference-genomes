@@ -28,7 +28,7 @@ $0 GENOME1 [ GENOME2 ... ]
 Fetches reference genomes from UCSC, unzips, indexes, and uploads to S3."
 fi
 
-./genome-to-local.sh $@ 
+`dirname $BASH_SOURCE`/genome-to-local.sh $@
 
 aws s3 sync --exclude "*.gz" --exclude "*.2bit" --region us-east-1 \
     $LOCAL s3://data.cloud.refinery-platform.org/data/igv-reference

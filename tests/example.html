@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IGV Reference Data Example</title>
+    <!-- jQuery UI CSS -->
+    <link rel="stylesheet" type="text/css"
+          href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/themes/smoothness/jquery-ui.css"/>
+    <!-- Font Awesome CSS -->
+    <link rel="stylesheet" type="text/css"
+          href="https://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"/>
+    <!-- IGV CSS -->
+    <link rel="stylesheet" type="text/css" href="https://igv.org/web/release/1.0.5/igv-1.0.5.css">
+    <!-- jQuery JS -->
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script type="text/javascript"
+            src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+    <!-- IGV JS-->
+    <script type="text/javascript" src="https://igv.org/web/release/1.0.5/igv-1.0.5.js"></script>
+</head>
+<body>
+<div class="container-fluid" id="igv"></div>
+<script type="text/javascript">
+
+    $(document).ready(function () {
+
+        var div = $("#igv")[0],
+                options = {
+                    showNavigation: true,
+                    showRuler: true,
+                    genome: "hg19",
+                    locus: "chr1:10000-40000",
+                    tracks: [
+                        {
+                            name: "Genes",
+                            type: "annotation",
+                            format: "bed",
+                            sourceType: "file",
+                            url: "output/refGene.bed.head",
+                            indexURL: "output/refGene.bed.tbi.head",
+                            displayMode: "EXPANDED"
+                        }
+
+                    ]
+                };
+
+        igv.createBrowser(div, options);
+
+    });
+
+</script>
+</body>
+</html>
