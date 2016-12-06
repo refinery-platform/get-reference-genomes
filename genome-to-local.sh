@@ -3,6 +3,7 @@ set -o errexit
 set -o nounset
 #set -o verbose
 #set -o xtrace
+set -o pipefail
 
 ### Helper functions
 
@@ -61,7 +62,7 @@ fi
 
 mkdir -p $LOCAL
 
-if [[ $# -eq 0 ]]; then
+if [ $# -eq 0 ]; then
   die "USAGE:
 $BASH_SOURCE GENOME1 [ GENOME2 ... ]
 Fetches reference genomes from UCSC, unzips, and indexes."
@@ -82,8 +83,8 @@ for GENOME in $@; do
   cd $GENOME
   
   download_and_unzip bigZips/$GENOME.2bit
-  if [[ -e $GENOME.2bit ]]; then
-    if [[ -e $GENOME.fa ]]
+  if [ -e $GENOME.2bit ]; then
+    if [ -e $GENOME.fa ]
       then warn "$GENOME.fa already exists: will not regenerate"
       else twoBitToFa $GENOME.2bit $GENOME.fa
     fi
@@ -92,13 +93,13 @@ for GENOME in $@; do
   download_and_unzip bigZips/$GENOME.fa
   # Replace $GENOME.fa with upstream1000.fa to get a smaller file for testing.
 
-  if [[ -e $GENOME.fa.fai ]]
+  if [ -e $GENOME.fa.fai ]
     then warn "$GENOME.fa.fai already exists: will not regenerate"
     else faidx $GENOME.fa > /dev/null || warn 'FAI creation failed'
   fi
 
   download_and_unzip database/cytoBand.txt  
-  if [[ ! -e cytoBand.txt ]]; then
+  if [ ! -e cytoBand.txt ]; then
     # "Ideo" seems to be more detailed?
     download_and_unzip database/cytoBandIdeo.txt \
       && mv cytoBandIdeo.txt cytoBand.txt \
@@ -107,16 +108,31 @@ for GENOME in $@; do
   fi
 
   download_and_unzip database/refGene.txt
-  if [[ -e refGene.bed ]]
+  if [ -e refGene.bed ]
     then warn "refGene.bed already exists: will not regenerate"
-    else python $SCRIPT_DIR/refgene-ucsc-to-bed.py refGene.txt | sort -k1,1 -k2,2n > refGene.bed
+    else python $SCRIPT_DIR/refgene-ucsc-to-bed.py refGene.txt | \
+         sort -k1,1 -k2,2n > refGene.bed
+  fi
+  if [ -e refGene.collapsed.bed ]
+    then warn "refGene.collapsed.bed already exists: will not regenerate"
+    # Sort by the name column to bring name-duplicates together,
+    # and then re-sort by address, as required by bedToBigBed.
+    else python $SCRIPT_DIR/collapse-lines-that-differ-only-in-name.py refGene.bed | \
+         sort -k4 | \
+         python $SCRIPT_DIR/collapse-lines-that-share-a-name.py | \
+         sort -k1,1 -k2,2n > refGene.collapsed.bed
   fi
 
   CHROM_URL=$BASE_URL/bigZips/$GENOME.chrom.sizes
-  if [[ -e refGene.bed.tbi ]]
+  if [ -e refGene.bed.tbi ]
     then warn "refGene.bed.tbi already exists: will not regenerate"
     else bedToBigBed -type=bed4+8 refGene.bed $CHROM_URL refGene.bed.tbi
   fi
+  if [ -e refGene.collapsed.bed.tbi ]
+    then warn "refGene.collapsed.bed.tbi already exists: will not regenerate"
+    else bedToBigBed -type=bed4+8 refGene.collapsed.bed $CHROM_URL refGene.collapsed.bed.tbi
+  fi
+
 done
 
 echo 'Disk space used:'

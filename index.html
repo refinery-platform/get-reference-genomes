@@ -43,15 +43,23 @@
 //                    },
                     tracks: [
                         {
-                            name: "Genes, full",
+                            name: "Transcriptions",
                             type: "annotation",
                             format: "bed",
                             sourceType: "file",
                             url: "tests/output/refGene.bed.head",
                             indexURL: "tests/output/refGene.bed.tbi.head",
                             displayMode: "EXPANDED"
+                        },
+                        {
+                            name: "Genes",
+                            type: "annotation",
+                            format: "bed",
+                            sourceType: "file",
+                            url: "tests/output/refGene.collapsed.bed.head",
+                            indexURL: "tests/output/refGene.collapsed.bed.tbi.head",
+                            displayMode: "EXPANDED"
                         }
-
                     ]
                 };
 
