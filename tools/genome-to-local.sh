@@ -52,12 +52,12 @@ download "bedToBigBed", and "chmod a+x". (Or build from source.)'
 
 # We cd before calling the python script, so we need an absolute path
 pushd `dirname $BASH_SOURCE` > /dev/null
-SCRIPT_DIR=$PWD
+UTILS_DIR=$PWD/../utils
 popd > /dev/null
 
-if [ -z "${TEST_DEST:=}" ] # Assign null string if not already set.
+if [ -z "${GENOME_TEST_TMP:=}" ] # Assign null string if not already set.
   then LOCAL=/tmp/genomes
-  else LOCAL="$TEST_DEST"
+  else LOCAL=/tmp/genome/$GENOME_TEST_TMP
 fi
 
 mkdir -p $LOCAL
@@ -72,9 +72,10 @@ for GENOME in $@; do
   echo # Blank line for readability
   echo "Starting $GENOME..."
 
-  if [ -z "$TEST_DEST" ]
+  if [ -z "${GENOME_CACHE_URL:=}" ]
+    # For development, you can set up a local cache, rather than downloading from UCSC each time.
     then BASE_URL=ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/
-    else BASE_URL=http://localhost:8000/
+    else BASE_URL=$GENOME_CACHE_URL/$GENOME/
   fi
   curl --fail $BASE_URL || die "$GENOME is not available at $BASE_URL"
 
@@ -110,16 +111,16 @@ for GENOME in $@; do
   download_and_unzip database/refGene.txt
   if [ -e refGene.bed ]
     then warn "refGene.bed already exists: will not regenerate"
-    else python $SCRIPT_DIR/refgene-ucsc-to-bed.py refGene.txt | \
+    else python $UTILS_DIR/refgene-ucsc-to-bed.py refGene.txt | \
          sort -k1,1 -k2,2n > refGene.bed
   fi
   if [ -e refGene.collapsed.bed ]
     then warn "refGene.collapsed.bed already exists: will not regenerate"
     # Sort by the name column to bring name-duplicates together,
     # and then re-sort by address, as required by bedToBigBed.
-    else python $SCRIPT_DIR/collapse-lines-that-differ-only-in-name.py refGene.bed | \
+    else python $UTILS_DIR/collapse-lines-that-differ-only-in-name.py refGene.bed | \
          sort -k4 | \
-         python $SCRIPT_DIR/collapse-lines-that-share-a-name.py | \
+         python $UTILS_DIR/collapse-lines-that-share-a-name.py | \
          sort -k1,1 -k2,2n > refGene.collapsed.bed
   fi
 

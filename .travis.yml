@@ -1,3 +1,13 @@
+language: python
+python:
+  - "2.7"
+
+install:
+  - pip install -r requirements.txt
+  - PATH=$PATH:`pwd`
+  - wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/twoBitToFa && chmod a+x twoBitToFa
+  - wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedToBigBed && chmod a+x bedToBigBed
+
 script:
   - set -e # Any error will cause travis to exit early and report a failure.
-  - tests/test.sh
+  - python tests/test.py
