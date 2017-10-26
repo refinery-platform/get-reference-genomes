@@ -33,5 +33,8 @@ fi
 aws s3 sync --exclude "*.gz" --exclude "*.2bit" --region us-east-1 \
     $LOCAL s3://data.cloud.refinery-platform.org/data/igv-reference
 
+DIR=`dirname $0`
+$DIR/ls-s3-to-s3.sh
+
 echo 'Delete the cache to free up some disk.'
 du -h $LOCAL

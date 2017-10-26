@@ -74,10 +74,12 @@ for GENOME in $@; do
 
   if [ -z "${GENOME_CACHE_URL:=}" ]
     # For development, you can set up a local cache, rather than downloading from UCSC each time.
-    then BASE_URL=ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/
-    else BASE_URL=$GENOME_CACHE_URL/$GENOME/
+    then BASE_URL=ftp://hgdownload.cse.ucsc.edu/goldenPath/$GENOME/ && \
+         MESSAGE="$GENOME is not available at $BASE_URL"
+    else BASE_URL=$GENOME_CACHE_URL/$GENOME/ && \
+         MESSAGE="$GENOME is not in cache at $BASE_URL; Add to cache or unset GENOME_CACHE_URL"
   fi
-  curl --fail $BASE_URL || die "$GENOME is not available at $BASE_URL"
+  curl --fail $BASE_URL || die "$MESSAGE"
 
   cd $LOCAL
   mkdir -p $GENOME
