@@ -1,8 +1,8 @@
 # get-reference-genomes
 Gets reference genomes from UCSC and prepares them for use by IGV.js.
 
-The [gh-pages site](https://refinery-platform.github.io/get-reference-genomes)
-for this repo demonstrates how these reference genomes can be used.
+[Here's](https://refinery-platform.github.io/get-reference-genomes)
+a list and demonstration of the currently available reference genomes.
 
 ## Setup
 
@@ -24,6 +24,4 @@ wget http://hgdownload.soe.ucsc.edu/admin/exe/linux.x86_64/bedToBigBed && chmod 
 
 ## Development
 
-During development, 
-- Run `tests/test.sh` to confirm that the scripts perform the expected transformations.
-- Load `index.html` to see how the test fixtures would be rendered.
+Run `tests/test.sh` to confirm that the scripts perform the expected transformations.

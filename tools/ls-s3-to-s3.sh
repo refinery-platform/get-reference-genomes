@@ -5,7 +5,7 @@ set -o nounset
 warn() { echo "$@" >&2; }
 
 json () {
-  python -c 'from sys import argv; from json import dumps; print dumps(argv[1:])' $@
+  python -c 'from sys import argv; from json import dumps; print dumps( dict([ (k, {}) for k in argv[1:] ]) )' $@
 }
 
 DIR=`dirname $0`
